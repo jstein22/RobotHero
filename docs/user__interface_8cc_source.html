@@ -88,80 +88,221 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;stopwatch.h&quot;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">using namespace </span><a class="code" href="namespacestopwatch.html">stopwatch</a>;</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;robot.h&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="classstopwatch_1_1UserInterface.html#a3567885d49505d1f4c0c6fff3bf3d386">    6</a></span>&#160;<a class="code" href="classstopwatch_1_1UserInterface.html#a3567885d49505d1f4c0c6fff3bf3d386">UserInterface::UserInterface</a>(<a class="code" href="classstopwatch_1_1StopWatch.html">StopWatch</a>&amp; sw) : Process(<span class="stringliteral">&quot;user input&quot;</span>), _stopwatch(sw) {</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    initscr();   <span class="comment">// Start ncurses</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    timeout(1);  <span class="comment">// Timeout for waiting for user input</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    noecho();    <span class="comment">// Do not echo user input to the screen</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    curs_set(0); <span class="comment">// Do not show the cursor</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;};</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classstopwatch_1_1UserInterface.html#acdbcd72884e5ce167c339617c9c26e58">   13</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classstopwatch_1_1UserInterface.html#acdbcd72884e5ce167c339617c9c26e58">UserInterface::show_time</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, high_resolution_clock::duration d) {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="comment">// Print the time at the desired position.</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="comment">// mvprintw just calls sprintf</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    mvprintw(x,y,<span class="stringliteral">&quot;%d:%02d:%02d&quot;</span>, </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        std::chrono::duration_cast&lt;std::chrono::minutes&gt;(d).count(),</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        std::chrono::duration_cast&lt;std::chrono::seconds&gt;(d).count()%60,</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        (std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(d).count()%1000)/10</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    );</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classstopwatch_1_1UserInterface.html#a7c9acd9ad089bbd6d0ca371a14cd82fa">   24</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classstopwatch_1_1UserInterface.html#a7c9acd9ad089bbd6d0ca371a14cd82fa">UserInterface::update</a>() {</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="comment">// USER INPUT</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="comment">// get a character from the user, if one is ready.</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="comment">// If no character is ready, getch() returns ERR (which is</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="comment">// ignored below since there is no condition in the switch statement)</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">int</span> c = getch();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordflow">switch</span> ( c ) {            </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;s&#39;</span>:</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            emit(Event(<span class="stringliteral">&quot;start/stop&quot;</span>));</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;r&#39;</span>:</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            emit(Event(<span class="stringliteral">&quot;reset&quot;</span>));</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            clear(); <span class="comment">// Clear the screen of old stuff</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;l&#39;</span>:</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            emit(Event(<span class="stringliteral">&quot;lap&quot;</span>));</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;q&#39;</span>:</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;halting\n&quot;</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            halt();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    }</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">// OUTPUT</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="classstopwatch_1_1UserInterface.html#acdbcd72884e5ce167c339617c9c26e58">show_time</a>(1,1,_stopwatch.<a class="code" href="classstopwatch_1_1StopWatch.html#a702d612653dcd1fc413de32707f0dbfa">value</a>()); </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    mvprintw(3,1,<span class="stringliteral">&quot;start/stop(s), lap(l), reset(r), quit(q)&quot;</span>);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">for</span> ( <span class="keywordtype">int</span> i=0; i&lt;_stopwatch.<a class="code" href="classstopwatch_1_1StopWatch.html#a8b335f9667cd518297ca3be4e57c4972">laps</a>().size(); i++ ) {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        mvprintw(5+i, 1, <span class="stringliteral">&quot;Lap %d&quot;</span>, _stopwatch.<a class="code" href="classstopwatch_1_1StopWatch.html#a8b335f9667cd518297ca3be4e57c4972">laps</a>().size()-i);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="classstopwatch_1_1UserInterface.html#acdbcd72884e5ce167c339617c9c26e58">show_time</a>(5+i, 10, _stopwatch.<a class="code" href="classstopwatch_1_1StopWatch.html#a8b335f9667cd518297ca3be4e57c4972">laps</a>()[i]);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// NOTE: Since the stopwatch is running every 10 ms, we should sleep</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="comment">//       the ui to give processing time back to the OS. It is debatable</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">//       whether this is the right place to put this. It could also become</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">//       an Elma feature, or it could go in the StopWatch class, etc.</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">//       The number 9999 should also be a parameter and not a constant.</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    usleep(9999);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
-<div class="ttc" id="classstopwatch_1_1StopWatch_html_a8b335f9667cd518297ca3be4e57c4972"><div class="ttname"><a href="classstopwatch_1_1StopWatch.html#a8b335f9667cd518297ca3be4e57c4972">stopwatch::StopWatch::laps</a></div><div class="ttdeci">const vector&lt; high_resolution_clock::duration &gt; &amp; laps()</div><div class="ttdoc">Get a list of lap times. </div><div class="ttdef"><b>Definition:</b> <a href="stopwatch_8h_source.html#l00038">stopwatch.h:38</a></div></div>
-<div class="ttc" id="namespacestopwatch_html"><div class="ttname"><a href="namespacestopwatch.html">stopwatch</a></div><div class="ttdef"><b>Definition:</b> <a href="off_8h_source.html#l00006">off.h:6</a></div></div>
-<div class="ttc" id="classstopwatch_1_1UserInterface_html_acdbcd72884e5ce167c339617c9c26e58"><div class="ttname"><a href="classstopwatch_1_1UserInterface.html#acdbcd72884e5ce167c339617c9c26e58">stopwatch::UserInterface::show_time</a></div><div class="ttdeci">void show_time(int x, int y, high_resolution_clock::duration d)</div><div class="ttdoc">Display the time at the given x,y position on the screen. </div><div class="ttdef"><b>Definition:</b> <a href="user__interface_8cc_source.html#l00013">user_interface.cc:13</a></div></div>
-<div class="ttc" id="classstopwatch_1_1UserInterface_html_a3567885d49505d1f4c0c6fff3bf3d386"><div class="ttname"><a href="classstopwatch_1_1UserInterface.html#a3567885d49505d1f4c0c6fff3bf3d386">stopwatch::UserInterface::UserInterface</a></div><div class="ttdeci">UserInterface(StopWatch &amp;sw)</div><div class="ttdef"><b>Definition:</b> <a href="user__interface_8cc_source.html#l00006">user_interface.cc:6</a></div></div>
-<div class="ttc" id="classstopwatch_1_1UserInterface_html_a7c9acd9ad089bbd6d0ca371a14cd82fa"><div class="ttname"><a href="classstopwatch_1_1UserInterface.html#a7c9acd9ad089bbd6d0ca371a14cd82fa">stopwatch::UserInterface::update</a></div><div class="ttdeci">void update()</div><div class="ttdoc">Update the user interface by (a) reading keyboard input and (b) writing to the screen. </div><div class="ttdef"><b>Definition:</b> <a href="user__interface_8cc_source.html#l00024">user_interface.cc:24</a></div></div>
-<div class="ttc" id="classstopwatch_1_1StopWatch_html_a702d612653dcd1fc413de32707f0dbfa"><div class="ttname"><a href="classstopwatch_1_1StopWatch.html#a702d612653dcd1fc413de32707f0dbfa">stopwatch::StopWatch::value</a></div><div class="ttdeci">high_resolution_clock::duration value()</div><div class="ttdoc">Get the time stored by the stopwatch. </div><div class="ttdef"><b>Definition:</b> <a href="stopwatch_8cc_source.html#l00024">stopwatch.cc:24</a></div></div>
-<div class="ttc" id="classstopwatch_1_1StopWatch_html"><div class="ttname"><a href="classstopwatch_1_1StopWatch.html">stopwatch::StopWatch</a></div><div class="ttdoc">A stop watch class, that inherits from StateMachine. </div><div class="ttdef"><b>Definition:</b> <a href="stopwatch_8h_source.html#l00016">stopwatch.h:16</a></div></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">using namespace </span><a class="code" href="namespacerobot.html">robot</a>;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">//bool drawn = false;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classrobot_1_1UserInterface.html#a83556716557ae5c40e6943e448530629">   11</a></span>&#160;<a class="code" href="classrobot_1_1UserInterface.html#a83556716557ae5c40e6943e448530629">UserInterface::UserInterface</a>(<a class="code" href="classrobot_1_1Robot.html">Robot</a>&amp; rob) : Process(<span class="stringliteral">&quot;user input&quot;</span>), _robot(rob) {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    initscr();   <span class="comment">// Start ncurses</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    timeout(1);  <span class="comment">// Timeout for waiting for user input</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    noecho();    <span class="comment">// Do not echo user input to the screen</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    curs_set(0); <span class="comment">// Do not show the cursor</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;};</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classrobot_1_1UserInterface.html#a627a8c99a62827cd7ae04007cc57120e">   19</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classrobot_1_1UserInterface.html#a627a8c99a62827cd7ae04007cc57120e">UserInterface::show_robot</a>(){</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">int</span> robPosX = 11;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">int</span> robPosY = 9;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="comment">//create overarching robot window so it is easy to deploy shield.</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    WINDOW *robotWin = newwin(10,11,robPosY,robPosX);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">if</span> (_robot.<a class="code" href="classrobot_1_1Robot.html#ad284871e5b974e867a00b6870dab8557">shieldStatus</a>()){</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        box(robotWin,<span class="charliteral">&#39;|&#39;</span>,<span class="charliteral">&#39;-&#39;</span>);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    }</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="comment">//create bottom part of robot</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    WINDOW *robBot = derwin(robotWin,2,9,8,1);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    box(robBot,<span class="charliteral">&#39;|&#39;</span>,<span class="charliteral">&#39;-&#39;</span>);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">if</span> (_robot.<a class="code" href="classrobot_1_1Robot.html#a8d24c661d95c0d711ea1c0a166ed131d">isOn</a>()){</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="comment">//create middle part of robot</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        WINDOW *robMid = derwin(robotWin,3,5,6,3);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        box(robMid,<span class="charliteral">&#39;|&#39;</span>,<span class="charliteral">&#39;-&#39;</span>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="comment">//create top part of robot</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        WINDOW *robTop = derwin(robotWin,2,3,5,4);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        box(robTop,<span class="charliteral">&#39;|&#39;</span>,<span class="charliteral">&#39;-&#39;</span>);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">//refresh robot window and every subwindow inside of it.</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    wsyncup(robotWin);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    wrefresh(robotWin);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keywordtype">void</span> UserInterface::show_path(){</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">int</span> pathLength = 18;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">//create left and right path barrier windows</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    WINDOW *leftPathWin = newwin(pathLength,1,1,1);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    WINDOW *rightPathWin = newwin(pathLength,1,1,30);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">if</span>(!_robot.<a class="code" href="classrobot_1_1Robot.html#a8a2ff1df5fdcf35bc7600499c34435df">flagStatus</a>()){</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; pathLength*2; i++){</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            <span class="comment">//this path pattern indicates the robot is stopped</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            waddch(leftPathWin,<span class="charliteral">&#39;|&#39;</span>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            waddch(leftPathWin,<span class="charliteral">&#39;-&#39;</span>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            waddch(rightPathWin,<span class="charliteral">&#39;|&#39;</span>);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            waddch(rightPathWin,<span class="charliteral">&#39;-&#39;</span>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            i++;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }<span class="keywordflow">else</span>{</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1;i &lt; pathLength*2; i++){</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            <span class="comment">//this path pattern indicates the robot is moving</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            waddch(leftPathWin,<span class="charliteral">&#39;|&#39;</span>);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            waddch(rightPathWin,<span class="charliteral">&#39;|&#39;</span>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            i++;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }     </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">//referesh left and right path windows</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    wrefresh(leftPathWin);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    wrefresh(rightPathWin);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">void</span> UserInterface::show_enemy(){</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">int</span> enemyPosX = 12;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">int</span> enemyPosY = 2;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">//create enemy window</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    WINDOW *enemyWin = newwin(5,7,enemyPosY,enemyPosX);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">if</span> (_robot.<a class="code" href="classrobot_1_1Robot.html#abc486bd521fbbd43deb1421e4e303c35">enemyStatus</a>() &amp;&amp; !_timerVal){</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="comment">//drawing stick figure</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        wmove(enemyWin,1, 1);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39; &#39;</span>);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39; &#39;</span>);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39;0&#39;</span>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39; &#39;</span>);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39; &#39;</span>);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        wmove(enemyWin,2, 1);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39;&lt;&#39;</span>);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39;-&#39;</span>);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39;|&#39;</span>);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39;-&#39;</span>);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39;&gt;&#39;</span>);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        wmove(enemyWin,3, 1);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39; &#39;</span>);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39;/&#39;</span>);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39; &#39;</span>);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39;\\&#39;</span>);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        waddch(enemyWin,<span class="charliteral">&#39; &#39;</span>);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        wrefresh(enemyWin);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">else</span>{</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="comment">//have to clear the window and refresh it when condition isnt met</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">//so that when it dissapears the window reflects it</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        wclear(enemyWin);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        wrefresh(enemyWin);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;}</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keywordtype">bool</span> UserInterface::arrowTimer(high_resolution_clock::duration d){</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="comment">// timer to show the arrow for a short bit of time before dissapearing inicating arrow is moving</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">if</span> (std::chrono::duration_cast&lt;std::chrono::seconds&gt;(d).count() &gt; .5 &amp;&amp; _robot.<a class="code" href="classrobot_1_1Robot.html#ade418c41608b363df3eb5cc7af0e424e">arrowStatus</a>()){</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        _timerVal = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="comment">// this ensures that the enemy actually dissapears when arrow times out.</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="keywordflow">if</span> (std::chrono::duration_cast&lt;std::chrono::seconds&gt;(d).count() &gt; 1){</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            _timerVal = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            _robot.<a class="code" href="classrobot_1_1Robot.html#aa99e4cf94c15f600c89abf0319ca481a">enemyDissapeared</a>();</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">return</span> _timerVal;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="keywordtype">void</span> UserInterface::show_arrow(){</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="comment">//create arrow window</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    WINDOW *arrowWin = newwin(2,1,7,15);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordflow">if</span> (_robot.<a class="code" href="classrobot_1_1Robot.html#ade418c41608b363df3eb5cc7af0e424e">arrowStatus</a>() &amp;&amp; !_timerVal){</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="comment">//draw arrow </span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        waddch(arrowWin,<span class="charliteral">&#39;^&#39;</span>);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        waddch(arrowWin,<span class="charliteral">&#39;|&#39;</span>);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        wrefresh(arrowWin);</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    }</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="comment">//refresh arrow window</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        wclear(arrowWin);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        wrefresh(arrowWin);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    }</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;}</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
+<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="classrobot_1_1UserInterface.html#a7c9acd9ad089bbd6d0ca371a14cd82fa">  142</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classrobot_1_1UserInterface.html#a7c9acd9ad089bbd6d0ca371a14cd82fa">UserInterface::update</a>() {</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="comment">// USER INPUT</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="comment">// get a character from the user, if one is ready.</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="comment">// If no character is ready, getch() returns ERR (which is</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="comment">// ignored below since there is no condition in the switch statement)</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordtype">int</span> c = getch();</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">switch</span> ( c ) {            </div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;o&#39;</span>:</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            emit(Event(<span class="stringliteral">&quot;on&quot;</span>));</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;d&#39;</span>:</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            emit(Event(<span class="stringliteral">&quot;off&quot;</span>));</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            clear(); <span class="comment">// Clear the screen of old stuff</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;w&#39;</span>:</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            emit(Event(<span class="stringliteral">&quot;wander&quot;</span>));</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;s&#39;</span>:</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            emit(Event(<span class="stringliteral">&quot;stop&quot;</span>));</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;q&#39;</span>:</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;halting\n&quot;</span>;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            halt();</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;e&#39;</span>:</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            emit(Event(<span class="stringliteral">&quot;enemy&quot;</span>));</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keywordflow">case</span> <span class="charliteral">&#39;f&#39;</span>:</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            emit(Event(<span class="stringliteral">&quot;fire&quot;</span>));</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    }</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="comment">// OUTPUT</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <a class="code" href="classrobot_1_1UserInterface.html#a627a8c99a62827cd7ae04007cc57120e">show_robot</a>();  </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    show_path();</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    show_enemy();</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    show_arrow();</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    arrowTimer(_robot.<a class="code" href="classrobot_1_1Robot.html#a619e051a3bce6782b5d6da4f270890a5">timeValue</a>());</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    mvprintw(20,1,<span class="stringliteral">&quot;on(o), off(d), wander(w), stop moving(s), quit(q), Release enemy(e)&quot;</span>);</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="comment">// we want the fire prompt to show up only after the enemy appears</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keywordflow">if</span>(_robot.<a class="code" href="classrobot_1_1Robot.html#abc486bd521fbbd43deb1421e4e303c35">enemyStatus</a>()){</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        mvprintw(21,1,<span class="stringliteral">&quot;Press (f) to fire an arrow at the enemy!&quot;</span>);</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    }</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keywordflow">for</span> ( <span class="keywordtype">int</span> i=0; i&lt;_robot.<a class="code" href="classrobot_1_1Robot.html#a36ca6e6e303c910acbbb38dcbb49e98e">addEvents</a>().size(); i++ ) {</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        mvprintw(23+i, 1, <span class="stringliteral">&quot;Event: %s&quot;</span>, _robot.<a class="code" href="classrobot_1_1Robot.html#a36ca6e6e303c910acbbb38dcbb49e98e">addEvents</a>()[i].c_str());</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    }</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="comment">// NOTE: Since the program is running every 10 ms, we should sleep</span></div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="comment">//       the ui to give processing time back to the OS. It is debatable</span></div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    <span class="comment">//       whether this is the right place to put this. It could also become</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="comment">//       an Elma feature, or it could go in the StopWatch class, etc.</span></div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="comment">//       The number 9999 should also be a parameter and not a constant.</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    usleep(9999);</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="comment">//processor still sounds like its working really hard when I compile and especially </span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="comment">//when I run muy code, not sure if that is due to the elma docker image or not.</span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;}</div>
+<div class="ttc" id="classrobot_1_1Robot_html_a8d24c661d95c0d711ea1c0a166ed131d"><div class="ttname"><a href="classrobot_1_1Robot.html#a8d24c661d95c0d711ea1c0a166ed131d">robot::Robot::isOn</a></div><div class="ttdeci">bool isOn()</div><div class="ttdoc">getter method to retrieve on status </div><div class="ttdef"><b>Definition:</b> <a href="robot_8cc_source.html#l00099">robot.cc:99</a></div></div>
+<div class="ttc" id="classrobot_1_1UserInterface_html_a7c9acd9ad089bbd6d0ca371a14cd82fa"><div class="ttname"><a href="classrobot_1_1UserInterface.html#a7c9acd9ad089bbd6d0ca371a14cd82fa">robot::UserInterface::update</a></div><div class="ttdeci">void update()</div><div class="ttdoc">Update the user interface by (a) reading keyboard input and (b) writing to the screen. </div><div class="ttdef"><b>Definition:</b> <a href="user__interface_8cc_source.html#l00142">user_interface.cc:142</a></div></div>
+<div class="ttc" id="classrobot_1_1Robot_html_a619e051a3bce6782b5d6da4f270890a5"><div class="ttname"><a href="classrobot_1_1Robot.html#a619e051a3bce6782b5d6da4f270890a5">robot::Robot::timeValue</a></div><div class="ttdeci">high_resolution_clock::duration timeValue()</div><div class="ttdoc">getter method to retrieve status specific of </div><div class="ttdef"><b>Definition:</b> <a href="robot_8cc_source.html#l00079">robot.cc:79</a></div></div>
+<div class="ttc" id="classrobot_1_1UserInterface_html_a627a8c99a62827cd7ae04007cc57120e"><div class="ttname"><a href="classrobot_1_1UserInterface.html#a627a8c99a62827cd7ae04007cc57120e">robot::UserInterface::show_robot</a></div><div class="ttdeci">void show_robot()</div><div class="ttdoc">Display the robot figure at the given x,y position on the screen. </div><div class="ttdef"><b>Definition:</b> <a href="user__interface_8cc_source.html#l00019">user_interface.cc:19</a></div></div>
+<div class="ttc" id="classrobot_1_1Robot_html_abc486bd521fbbd43deb1421e4e303c35"><div class="ttname"><a href="classrobot_1_1Robot.html#abc486bd521fbbd43deb1421e4e303c35">robot::Robot::enemyStatus</a></div><div class="ttdeci">bool enemyStatus()</div><div class="ttdoc">getter method to retrieve status of the enemy </div><div class="ttdef"><b>Definition:</b> <a href="robot_8cc_source.html#l00103">robot.cc:103</a></div></div>
+<div class="ttc" id="classrobot_1_1Robot_html"><div class="ttname"><a href="classrobot_1_1Robot.html">robot::Robot</a></div><div class="ttdoc">A robot class, that inherits from StateMachine. </div><div class="ttdef"><b>Definition:</b> <a href="robot_8h_source.html#l00020">robot.h:20</a></div></div>
+<div class="ttc" id="classrobot_1_1Robot_html_aa99e4cf94c15f600c89abf0319ca481a"><div class="ttname"><a href="classrobot_1_1Robot.html#aa99e4cf94c15f600c89abf0319ca481a">robot::Robot::enemyDissapeared</a></div><div class="ttdeci">void enemyDissapeared()</div><div class="ttdoc">changes status of enemy and arrowfired </div><div class="ttdef"><b>Definition:</b> <a href="robot_8cc_source.html#l00088">robot.cc:88</a></div></div>
+<div class="ttc" id="classrobot_1_1Robot_html_ade418c41608b363df3eb5cc7af0e424e"><div class="ttname"><a href="classrobot_1_1Robot.html#ade418c41608b363df3eb5cc7af0e424e">robot::Robot::arrowStatus</a></div><div class="ttdeci">bool arrowStatus()</div><div class="ttdoc">getter method to retrieve status of arrow </div><div class="ttdef"><b>Definition:</b> <a href="robot_8cc_source.html#l00111">robot.cc:111</a></div></div>
+<div class="ttc" id="namespacerobot_html"><div class="ttname"><a href="namespacerobot.html">robot</a></div><div class="ttdef"><b>Definition:</b> <a href="fire_8h_source.html#l00006">fire.h:6</a></div></div>
+<div class="ttc" id="classrobot_1_1Robot_html_a36ca6e6e303c910acbbb38dcbb49e98e"><div class="ttname"><a href="classrobot_1_1Robot.html#a36ca6e6e303c910acbbb38dcbb49e98e">robot::Robot::addEvents</a></div><div class="ttdeci">const vector&lt; string &gt; &amp; addEvents()</div><div class="ttdoc">Get the list of Events. </div><div class="ttdef"><b>Definition:</b> <a href="robot_8h_source.html#l00077">robot.h:77</a></div></div>
+<div class="ttc" id="classrobot_1_1UserInterface_html_a83556716557ae5c40e6943e448530629"><div class="ttname"><a href="classrobot_1_1UserInterface.html#a83556716557ae5c40e6943e448530629">robot::UserInterface::UserInterface</a></div><div class="ttdeci">UserInterface(Robot &amp;rob)</div><div class="ttdef"><b>Definition:</b> <a href="user__interface_8cc_source.html#l00011">user_interface.cc:11</a></div></div>
+<div class="ttc" id="classrobot_1_1Robot_html_a8a2ff1df5fdcf35bc7600499c34435df"><div class="ttname"><a href="classrobot_1_1Robot.html#a8a2ff1df5fdcf35bc7600499c34435df">robot::Robot::flagStatus</a></div><div class="ttdeci">bool flagStatus()</div><div class="ttdoc">getter method to retrieve whether path should be moving or not </div><div class="ttdef"><b>Definition:</b> <a href="robot_8cc_source.html#l00095">robot.cc:95</a></div></div>
+<div class="ttc" id="classrobot_1_1Robot_html_ad284871e5b974e867a00b6870dab8557"><div class="ttname"><a href="classrobot_1_1Robot.html#ad284871e5b974e867a00b6870dab8557">robot::Robot::shieldStatus</a></div><div class="ttdeci">bool shieldStatus()</div><div class="ttdoc">getter method to retrieve shield status </div><div class="ttdef"><b>Definition:</b> <a href="robot_8cc_source.html#l00107">robot.cc:107</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 14 2019 18:49:22 for My Elma Project by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Mar 23 2019 01:34:35 for My Elma Project by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

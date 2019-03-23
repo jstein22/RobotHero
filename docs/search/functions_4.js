@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['reset',['reset',['../classstopwatch_1_1StopWatch.html#a1c0dcc57c615559f24bc9f8759271a9d',1,'stopwatch::StopWatch']]]
+  ['offstate',['OffState',['../classrobot_1_1OffState.html#a090b282baeec278eb934149ebd5d9917',1,'robot::OffState']]],
+  ['onstate',['OnState',['../classrobot_1_1OnState.html#a5b3936230dbba4c13c912e4602f5666a',1,'robot::OnState']]]
 ];
